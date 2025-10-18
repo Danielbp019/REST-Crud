@@ -1,0 +1,27 @@
+### get
+http://localhost:8000/api/articulos
+
+### get por id
+http://localhost:8000/api/articulos/4
+
+### post
+http://localhost:8000/api/articulos
+informacion en el body application/x-www-form-urlencoded
+
+### put
+http://localhost:8000/api/articulos/10
+informacion en el body application/x-www-form-urlencoded
+
+### delete
+http://localhost:8000/api/articulos/13
+Acepta ambas rutas por Parámetros de ruta (http://localhost:8000/api/articulos/13) y Parámetros de consulta (http://localhost:8000/api/articulos/?id=13).
+
+### Json
+{
+    "id": 1,
+    "titulo": "Un titulo",
+    "cuerpo": "Un cuerpo",
+    "autor": "Un autor",
+    "created_at": "2024-03-24T04:14:28.000Z",
+    "updated_at": "2024-03-24T04:14:28.000Z"
+}

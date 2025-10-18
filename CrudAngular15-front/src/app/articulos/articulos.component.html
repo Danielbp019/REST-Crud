@@ -1,0 +1,72 @@
+<br>
+<div style="text-align: center;">
+  <button type="button" class="btn btn-primary block glow" (click)="openModal(template)">Nuevo</button>
+</div>
+<br>
+
+<table class="table table-dark table-hover text-center">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">ID</th>
+      <th scope="col">Titulo</th>
+      <th scope="col">Cuerpo</th>
+      <th scope="col">Autor</th>
+      <th colspan="2" scope="colgroup">Accion</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let articulo of articulos; index as i">
+      <th scope="row">{{ i+1 }}</th>
+      <th>{{ articulo.id }}</th>
+      <td>{{articulo.titulo}}</td>
+      <td>{{articulo.cuerpo}}</td>
+      <td>{{articulo.autor}}</td>
+      <td>
+        <button type="button" class="btn btn-info" (click)="openModal(template,articulo)">Editar</button>
+      </td>
+      <td>
+        <button type="button" class="btn btn-danger" (click)="delete(articulo)">Borrar</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<ng-template #template>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">{{modalTitle}}</h4>
+    <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="modalRef?.hide()">
+      <span aria-hidden="true" class="visually-hidden">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+
+    <div class="form-group">
+      <label for="exampleInputEmail1">Titulo</label>
+      <input type="text" class="form-control" placeholder="Digite el titulo" [formControl]="titulo">
+      <small *ngIf="titulo.errors?.['required'] && showError"><b> *Titulo es obligatorio.</b></small>
+    </div>
+
+    <div class="form-group">
+      <label for="exampleInputEmail1">Cuerpo</label>
+      <input type="text" class="form-control" placeholder="Digite el cuerpo" [formControl]="cuerpo">
+      <small *ngIf="cuerpo.errors?.['required'] && showError"><b> *Cuerpo es obligatorio.</b></small>
+    </div>
+
+    <!-- 
+      Este código representa un fragmento de un template de Angular que muestra un campo de entrada de texto para "Autor" en un formulario.
+
+      El atributo "formControl" está vinculado a una propiedad "autor" del componente, lo que significa que la entrada del usuario en el campo de texto se actualizará automáticamente en la propiedad "autor" cuando cambie. El uso de formControl permite la validación y el seguimiento del estado del formulario de manera fácil y consistente.
+
+      Además, hay una etiqueta "label" para el campo de entrada, y un elemento "small" debajo de la entrada que muestra un mensaje de error si el campo es obligatorio y no se ha ingresado ningún valor. El mensaje de error solo se mostrará si la propiedad "showError" es verdadera y si el campo tiene un error "required".
+     -->
+    <div class="form-group">
+      <label for="exampleInputEmail1">Autor</label>
+      <input type="text" class="form-control" placeholder="Digite el autor" [formControl]="autor">
+      <small *ngIf="autor.errors?.['required'] && showError"><b> *Autor es obligatorio.</b></small>
+    </div>
+
+    <br>
+    <button type="button" class="btn btn-primary" (click)="save()">{{btnTitle}}</button>
+  </div>
+</ng-template>
