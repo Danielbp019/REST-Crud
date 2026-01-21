@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Models\Articulo;
 // Validaciones:
 use App\Http\Requests\ArticuloStoreRequest;
@@ -17,11 +18,14 @@ class ArticuloController extends Controller
      */
     public function index()
     {
-        //
-        // return Articulo::all();
-        $articulo = Articulo::select('id', 'titulo', 'cuerpo', 'autor', 'created_at', 'updated_at')
-            ->get();
-        return response()->json($articulo);
+        try {
+            $articulo = Articulo::select('id', 'titulo', 'cuerpo', 'autor', 'created_at', 'updated_at')
+                ->get();
+            return response()->json($articulo);
+        } catch (\Exception $e) {
+            \Log::error('Error al obtener la lista de artículos: ' . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Error al obtener la lista de artículos.'], 500);
+        }
     }
 
     /**
@@ -38,8 +42,8 @@ class ArticuloController extends Controller
             // Devolver el artículo creado
             return response()->json(['success' => true, 'message' => 'Se creo correctamente el articulo.', 'articulo' => $nuevoArticulo], 201);
         } catch (\Exception $e) {
-            // Si existe error.
-            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+            \Log::error('Error al crear el artículo: ' . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Error al crear el artículo.'], 500);
         }
     }
 
@@ -52,9 +56,11 @@ class ArticuloController extends Controller
             $articulo = Articulo::findOrFail($id);
 
             return response()->json($articulo);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['success' => false, 'message' => 'Artículo no encontrado.'], 404);
         } catch (\Exception $e) {
-            // Si existe error.
-            return response()->json(['success' => false, 'message' => 'Articulo no encontrado.'], 404);
+            \Log::error('Error al buscar el artículo: ' . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Error al buscar el artículo.'], 500);
         }
     }
 
@@ -80,9 +86,11 @@ class ArticuloController extends Controller
 
             // Devolver el artículo actualizado
             return response()->json(['success' => true, 'message' => 'Se edito correctamente el articulo.', 'articulo' => $editarArticulo], 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['success' => false, 'message' => 'Artículo no encontrado para actualizar.'], 404);
         } catch (\Exception $e) {
-            // Si existe error.
-            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+            \Log::error('Error al actualizar el artículo: ' . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Error al actualizar el artículo.'], 500);
         }
     }
 
@@ -97,9 +105,11 @@ class ArticuloController extends Controller
 
             // Si se ejecuta bien.
             return response()->json(['success' => true, 'message' => 'Articulo eliminado correctamente.'], 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['success' => false, 'message' => 'Artículo no encontrado para eliminar.'], 404);
         } catch (\Exception $e) {
-            // Si existe error.
-            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+            \Log::error('Error al eliminar el artículo: ' . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Error al eliminar el artículo.'], 500);
         }
     }
 

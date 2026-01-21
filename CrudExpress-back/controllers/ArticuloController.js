@@ -10,7 +10,8 @@ export class ArticuloController {
 
             res.json(datos);
         } catch (error) {
-            res.status(500).json({ error: 'Ha ocurrido un error al obtener todos los artículos' })
+            // console.error('Error al obtener la lista de artículos:', error);
+            res.status(500).json({ success: false, message: 'Error al obtener la lista de artículos.' })
         }
     }
 
@@ -22,12 +23,13 @@ export class ArticuloController {
                 "SELECT id ,titulo ,cuerpo ,autor ,created_at ,updated_at FROM articulos WHERE id = ?", [id])
 
             if (datos.length === 0) {
-                return res.status(404).json({ message: "No se encontro el articulo" })
+                return res.status(404).json({ success: false, message: "Artículo no encontrado." })
             }
 
             res.json(datos)
         } catch (error) {
-            res.status(500).json({ error: 'Ha ocurrido un error al obtener el artículo' })
+            // console.error('Error al buscar el artículo:', error);
+            res.status(500).json({ success: false, message: 'Error al buscar el artículo.' })
         }
     }
 
@@ -47,7 +49,7 @@ export class ArticuloController {
 
             // Ajuste la respuesta para que se vea exactamente igual a la de laravel
             res.status(201).json({
-                success: true, message: "Articulo creado", articulo: {
+                success: true, message: "Artículo creado", articulo: {
                     id: datos.insertId,
                     titulo: tituloLimpio,
                     cuerpo: cuerpoLimpio,
@@ -55,7 +57,8 @@ export class ArticuloController {
                 }
             })
         } catch (error) {
-            res.status(500).json({ success: false, message: 'Ha ocurrido un error al crear el artículo', error })
+            // console.error('Error al crear el artículo:', error);
+            res.status(500).json({ success: false, message: 'Error al crear el artículo.' })
         }
     }
 
@@ -74,11 +77,11 @@ export class ArticuloController {
                 "UPDATE articulos SET titulo = IFNULL(?, titulo), cuerpo = IFNULL(?, cuerpo), autor = IFNULL(?, autor) WHERE id = ?", [tituloLimpio, cuerpoLimpio, autorLimpio, id])
 
             if (datos.affectedRows === 0) {
-                return res.status(404).json({ message: "No se encontro el articulo" })
+                return res.status(404).json({ success: false, message: "Artículo no encontrado para actualizar." })
             }
             // Ajuste la respuesta para que se vea exactamente igual a la de laravel
             res.status(200).json({
-                success: true, message: "Articulo editado", articulo: {
+                success: true, message: "Artículo editado", articulo: {
                     id: parseInt(id),
                     titulo: tituloLimpio,
                     cuerpo: cuerpoLimpio,
@@ -86,7 +89,8 @@ export class ArticuloController {
                 }
             })
         } catch (error) {
-            res.status(500).json({ success: false, message: 'Ha ocurrido un error al editar el artículo', error })
+            // console.error('Error al actualizar el artículo:', error);
+            res.status(500).json({ success: false, message: 'Error al actualizar el artículo.' })
         }
     }
 
@@ -99,11 +103,12 @@ export class ArticuloController {
                 "DELETE FROM articulos WHERE id = ?", [id])
 
             if (datos.affectedRows === 0) {
-                return res.status(404).json({ message: "No se encontro el articulo" })
+                return res.status(404).json({ success: false, message: "Artículo no encontrado para eliminar." })
             }
-            res.status(204).json({ message: "Articulo eliminado" })
+            res.status(200).json({ success: true, message: "Artículo eliminado correctamente." })
         } catch (error) {
-            res.status(500).json({ error: 'Ha ocurrido un error al obtener el artículo' })
+            // console.error('Error al eliminar el artículo:', error);
+            res.status(500).json({ success: false, message: 'Error al eliminar el artículo.' })
         }
     }
 
